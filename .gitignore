@@ -1,6 +1,6 @@
 # DataDagger outputs
 output/
-*.html
+dev/
 *.csv
 *.xlsx
 *.json
