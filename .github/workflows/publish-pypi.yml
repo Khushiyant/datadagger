@@ -53,10 +53,18 @@ jobs:
         name: dist
         path: dist/
     
-    - name: Publish to PyPI
+    - name: Publish to PyPI (Trusted Publishing)
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         verbose: true
+        # Trusted publishing will be attempted first
+    
+    - name: Publish to PyPI (API Token Fallback)
+      if: failure()  # Only run if trusted publishing fails
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        verbose: true
+        password: ${{ secrets.PYPI_API_TOKEN }}  # Fallback to API token
 
   create-release:
     name: Create GitHub Release
