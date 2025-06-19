@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "datadagger"
+version = "1.0.0"
+description = "Influence Archaeology OSINT Tool for mapping information flow across digital communities"
+readme = "README.md"
+authors = [{ name = "Security Research Team" }]
+license = "MIT"
+requires-python = ">=3.8"
+keywords = [
+    "osint",
+    "social media",
+    "narrative tracking",
+    "misinformation",
+    "security research",
+]
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Information Technology",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Security",
+    "Topic :: Internet :: WWW/HTTP :: Indexing/Search",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+]
+
+dependencies = [
+    "click>=8.0.0",
+    "rich>=13.0.0",
+    "python-dotenv>=0.19.0",
+    "praw>=7.6.0",
+    "Mastodon.py>=1.8.0",
+    "tweepy>=4.14.0",
+    "requests>=2.28.0",
+    "nltk>=3.8",
+    "scikit-learn>=1.2.0",
+    "pandas>=1.5.0",
+    "matplotlib>=3.6.0",
+    "seaborn>=0.12.0",
+    "networkx>=3.0",
+    "textdistance>=4.5.0",
+    "wordcloud>=1.9.0",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/yourusername/datadagger"
+"Bug Reports" = "https://github.com/yourusername/datadagger/issues"
+"Source" = "https://github.com/yourusername/datadagger"
+
+[project.scripts]
+datadagger = "datadagger:cli"
+
+[tool.setuptools.packages.find]
+include = ["datadagger*"]
+exclude = ["tests*"]
