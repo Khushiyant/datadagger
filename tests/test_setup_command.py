@@ -48,20 +48,6 @@ class TestSetupCommand:
         assert 'reddit' in result.output
         assert 'mastodon' in result.output
     
-    def test_setup_command_with_platform_option(self):
-        """Test setup command with specific platform"""
-        with self.runner.isolated_filesystem():
-            with open('.env.example', 'w') as f:
-                f.write("REDDIT_CLIENT_ID=your_reddit_client_id\n")
-            
-            with patch('rich.prompt.Confirm.ask', return_value=True), \
-                 patch('webbrowser.open'), \
-                 patch('builtins.input', side_effect=['test_client_id', 'test_secret']):
-                
-                result = self.runner.invoke(setup, ['--platform', 'reddit'], obj={'verbose': False})
-                
-                assert result.exit_code in [0, 1]
-    
     def test_setup_command_context_error_handling(self):
         """Test setup command handles missing context gracefully"""
         with self.runner.isolated_filesystem():

@@ -87,6 +87,22 @@ class DataStore:
             
             for post in posts:
                 try:
+                    # Validate required fields
+                    if not post.get('id') or not post.get('platform'):
+                        continue
+                    
+                    # Parse and validate created_at date
+                    created_at = post.get('created_at')
+                    if isinstance(created_at, str):
+                        try:
+                            created_at = datetime.fromisoformat(created_at.replace('Z', '+00:00'))
+                        except (ValueError, AttributeError):
+                            # Skip posts with invalid dates
+                            continue
+                    elif not isinstance(created_at, datetime):
+                        # Skip posts with invalid date types
+                        continue
+                    
                     # Calculate engagement score
                     engagement = 0
                     if post.get('platform') == 'reddit':
@@ -109,7 +125,7 @@ class DataStore:
                         post.get('platform'),
                         post.get('content'),
                         post.get('author'),
-                        post.get('created_at'),
+                        created_at,
                         engagement,
                         json.dumps(metadata),
                         query

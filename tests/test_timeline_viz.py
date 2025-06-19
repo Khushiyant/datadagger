@@ -77,7 +77,7 @@ class TestTimelineVisualizer:
         ]
     
     @patch('plotly.graph_objects.Figure.write_html')
-    @patch('plotly.subplots.make_subplots')
+    @patch('datadagger.visualizers.timeline_viz.make_subplots')
     def test_create_timeline_basic(self, mock_subplots, mock_write_html):
         """Test basic timeline creation"""
         timeline_data = self.create_sample_timeline_data()
