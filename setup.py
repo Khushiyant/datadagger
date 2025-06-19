@@ -12,7 +12,7 @@ with open("requirements.txt", "r", encoding="utf-8") as fh:
 
 setup(
     name="datadagger",
-    version="1.0.0",
+    version="2.0.0",
     author="Security Research Team",
     description="Influence Archaeology OSINT Tool for mapping information flow across digital communities",
     long_description=long_description,
