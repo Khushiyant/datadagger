@@ -1,0 +1,8 @@
+# DataDagger - Influence Archaeology OSINT Tool
+
+include README.md
+include LICENSE
+include CHANGELOG.md
+include QUICKSTART.md
+include requirements.txt
+recursive-include datadagger *.py
