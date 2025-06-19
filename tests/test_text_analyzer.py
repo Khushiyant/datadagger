@@ -5,7 +5,14 @@ Tests for DataDagger text analysis functionality
 import pytest
 from unittest.mock import patch, Mock
 from datetime import datetime, timedelta
-from datadagger.analyzers.text_analyzer import TextAnalyzer
+from datadagger.analyzers.text_analyzer import TextAnalyzer, NLTK_DATA_AVAILABLE
+
+
+# Skip decorator for tests that require NLTK data
+requires_nltk = pytest.mark.skipif(
+    not NLTK_DATA_AVAILABLE, 
+    reason="NLTK data not available - skipping NLTK-dependent tests"
+)
 
 
 class TestTextAnalyzer:
@@ -57,6 +64,7 @@ class TestTextAnalyzer:
         keywords = text_analyzer.extract_keywords("", top_k=5)
         assert keywords == []
 
+    @requires_nltk
     def test_group_similar_content(self, text_analyzer, sample_posts):
         """Test grouping similar content"""
         grouped = text_analyzer.group_similar_content(sample_posts, threshold=0.5)
@@ -76,6 +84,7 @@ class TestTextAnalyzer:
         grouped = text_analyzer.group_similar_content([], threshold=0.5)
         assert grouped == []
 
+    @requires_nltk
     def test_group_similar_content_single_post(self, text_analyzer):
         """Test grouping with single post"""
         single_post = [{
@@ -99,6 +108,7 @@ class TestTextAnalyzer:
         keywords = text_analyzer.extract_keywords("test content")
         assert isinstance(keywords, list)
 
+    @requires_nltk
     def test_detect_narrative_evolution_basic(self, text_analyzer):
         """Test narrative evolution detection"""
         posts = [
@@ -127,6 +137,7 @@ class TestTextAnalyzer:
         assert 'evolution_detected' in evolution
         assert 'stages' in evolution
 
+    @requires_nltk
     def test_preprocess_text_functionality(self, text_analyzer):
         """Test text preprocessing functionality"""
         dirty_text = "Check out this #amazing @user https://example.com content 123!"

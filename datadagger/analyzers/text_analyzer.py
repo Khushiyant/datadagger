@@ -15,29 +15,58 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.cluster import DBSCAN
 import numpy as np
 
-# Download required NLTK data
-try:
-    nltk.data.find('tokenizers/punkt')
-except LookupError:
-    nltk.download('punkt')
+# Global flag to track NLTK data availability
+NLTK_DATA_AVAILABLE = False
 
-try:
-    nltk.data.find('corpora/stopwords')
-except LookupError:
-    nltk.download('stopwords')
+# Check if NLTK data is available
+def check_nltk_data():
+    global NLTK_DATA_AVAILABLE
+    try:
+        # Try to find punkt tokenizer data
+        nltk.data.find('tokenizers/punkt_tab')
+        NLTK_DATA_AVAILABLE = True
+    except LookupError:
+        try:
+            nltk.data.find('tokenizers/punkt')
+            NLTK_DATA_AVAILABLE = True
+        except LookupError:
+            NLTK_DATA_AVAILABLE = False
+    
+    # Also check for stopwords
+    if NLTK_DATA_AVAILABLE:
+        try:
+            nltk.data.find('corpora/stopwords')
+        except LookupError:
+            NLTK_DATA_AVAILABLE = False
+    
+    return NLTK_DATA_AVAILABLE
+
+# Initialize NLTK data availability check
+check_nltk_data()
 
 class TextAnalyzer:
     """Text analysis and similarity detection for social media content"""
     
     def __init__(self):
         self.stemmer = PorterStemmer()
-        self.stop_words = set(stopwords.words('english'))
+        if NLTK_DATA_AVAILABLE:
+            try:
+                self.stop_words = set(stopwords.words('english'))
+            except LookupError:
+                self.stop_words = self._get_fallback_stopwords()
+        else:
+            self.stop_words = self._get_fallback_stopwords()
+            
         self.vectorizer = TfidfVectorizer(
             max_features=1000,
             stop_words='english',
             lowercase=True,
             ngram_range=(1, 2)
         )
+    
+    def _get_fallback_stopwords(self):
+        """Return a basic set of stop words when NLTK data is not available"""
+        return set(['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'must', 'shall', 'can', 'this', 'that', 'these', 'those', 'i', 'you', 'he', 'she', 'it', 'we', 'they', 'me', 'him', 'her', 'us', 'them'])
     
     def preprocess_text(self, text: str) -> str:
         """
@@ -66,7 +95,16 @@ class TextAnalyzer:
         text = re.sub(r'\d+', '', text)
         
         # Tokenize and remove stop words
-        tokens = word_tokenize(text)
+        if NLTK_DATA_AVAILABLE:
+            try:
+                tokens = word_tokenize(text)
+            except LookupError:
+                # Fallback to simple split if NLTK data is not available
+                tokens = text.split()
+        else:
+            # Use simple split when NLTK data is not available
+            tokens = text.split()
+        
         tokens = [self.stemmer.stem(token) for token in tokens 
                  if token not in self.stop_words and len(token) > 2]
         
